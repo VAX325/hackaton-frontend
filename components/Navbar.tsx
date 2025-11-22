@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Settings, Send } from 'lucide-react';
 import { User, SearchResult } from '../types';
-import { CURRENT_USER, RECENT_USERS, SEARCH_RESULTS } from '../constants';
+import { api } from '../api';
 
 interface NavbarProps {
   onToggleChat: () => void;
@@ -11,6 +11,8 @@ interface NavbarProps {
   onNavigateToFeed: () => void;
   onNavigateToChats: () => void;
   onNavigateToSearch: (query: string) => void;
+  currentUser: User | null;
+  recentUsers: User[];
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -20,9 +22,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigateToGroup,
   onNavigateToFeed,
   onNavigateToChats,
-  onNavigateToSearch
+  onNavigateToSearch,
+  currentUser,
+  recentUsers
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -36,6 +41,24 @@ export const Navbar: React.FC<NavbarProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Search Debounce
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (searchQuery.length > 1) {
+        try {
+          const results = await api.search.query(searchQuery);
+          setSearchResults(results);
+        } catch (error) {
+          console.error("Search error", error);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
 
   const handleSearchResultClick = (result: SearchResult) => {
     setIsSearchFocused(false);
@@ -52,6 +75,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsSearchFocused(false);
     onNavigateToSearch(searchQuery);
   };
+
+  if (!currentUser) return null;
 
   return (
     <nav className="h-20 bg-radiy-card/95 backdrop-blur-md border-b border-radiy-border flex items-center px-4 md:px-8 fixed top-0 w-full z-50 shadow-sm">
@@ -80,23 +105,28 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Search Dropdown */}
-        {isSearchFocused && (
+        {isSearchFocused && searchQuery.length > 1 && (
           <div className="absolute top-full left-0 w-full bg-radiy-card border border-radiy-border rounded-2xl mt-2 shadow-2xl shadow-black/50 overflow-hidden z-50">
             <div className="p-2">
               <div className="text-[10px] text-radiy-muted uppercase font-bold mb-2 px-3 mt-2 tracking-wider">Результаты</div>
-              {SEARCH_RESULTS.map((result) => (
-                <div
-                  key={result.id}
-                  className="flex items-center p-2 hover:bg-radiy-bg rounded-xl cursor-pointer transition-colors group"
-                  onClick={() => handleSearchResultClick(result)}
-                >
-                  <img src={result.image} alt={result.title} className="w-9 h-9 rounded-xl object-cover mr-3" />
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-radiy-text group-hover:text-radiy-mint transition-colors">{result.title}</div>
-                    <div className="text-xs text-radiy-muted capitalize">{result.type === 'community' ? 'Сообщество' : 'Пользователь'}</div>
+              {searchResults.length > 0 ? (
+                searchResults.map((result) => (
+                  <div
+                    key={result.id}
+                    className="flex items-center p-2 hover:bg-radiy-bg rounded-xl cursor-pointer transition-colors group"
+                    onClick={() => handleSearchResultClick(result)}
+                  >
+                    <img src={result.image} alt={result.title} className="w-9 h-9 rounded-xl object-cover mr-3" />
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-radiy-text group-hover:text-radiy-mint transition-colors">{result.title}</div>
+                      <div className="text-xs text-radiy-muted capitalize">{result.type === 'community' ? 'Сообщество' : 'Пользователь'}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="p-3 text-xs text-radiy-muted text-center">Нет результатов</div>
+              )}
+
               {/* Show All Results Button */}
               <div
                 className="p-3 text-center text-xs font-bold text-radiy-mint cursor-pointer hover:bg-radiy-mint/10 rounded-xl mt-1 transition-colors"
@@ -119,16 +149,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onToggleChat}
           >
             <div className="flex -space-x-2">
-              {RECENT_USERS.slice(0, 6).map((user) => (
+              {recentUsers.slice(0, 6).map((user) => (
                 <img
-                  key={user.id}
-                  src={user.avatar}
+                  key={user.username}
+                  src={user.avatar_url}
                   alt={user.name}
                   className={`w-10 h-10 rounded-2xl border-[3px] border-radiy-bg transition-transform hover:translate-y-[-3px] hover:z-10 ${user.status === 'online' ? 'ring-2 ring-radiy-mint/50' : ''}`}
                   title={user.name}
-                  onClick={(e: Event) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    onNavigateToProfile(user.id);
+                    onNavigateToProfile(user.username);
                   }}
                 />
               ))}
@@ -143,6 +173,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onNavigateToProfile={onNavigateToProfile}
                 onNavigateToChats={onNavigateToChats}
                 onClose={onToggleChat}
+                currentUser={currentUser}
+                recentUsers={recentUsers}
               />
             </div>
           )}
@@ -151,14 +183,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Current User */}
         <div
           className="flex items-center gap-4 cursor-pointer group"
-          onClick={() => onNavigateToProfile(CURRENT_USER.id)}
+          onClick={() => onNavigateToProfile(currentUser.username)}
         >
           <div className="text-right hidden lg:block">
-            <div className="text-sm font-bold text-radiy-text group-hover:text-radiy-mint transition-colors drop-shadow-sm">{CURRENT_USER.name}</div>
+            <div className="text-sm font-bold text-radiy-text group-hover:text-radiy-mint transition-colors drop-shadow-sm">{currentUser.name}</div>
             <div className="text-xs text-radiy-mint opacity-90 text-glow">Online</div>
           </div>
           <img
-            src={CURRENT_USER.avatar}
+            src={currentUser.avatar_url}
             alt="Me"
             className="w-12 h-12 rounded-2xl border-2 border-radiy-card shadow-lg group-hover:border-radiy-mint transition-colors group-hover:shadow-glow"
           />
@@ -176,11 +208,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 const ChatWindow = ({
   onNavigateToProfile,
   onNavigateToChats,
-  onClose
+  onClose,
+  currentUser,
+  recentUsers
 }: {
   onNavigateToProfile: (id: string) => void,
   onNavigateToChats: () => void,
-  onClose: () => void
+  onClose: () => void,
+  currentUser: User,
+  recentUsers: User[]
 }) => {
   const [input, setInput] = React.useState('');
 
@@ -188,6 +224,10 @@ const ChatWindow = ({
     onClose(); // Close dropdown
     onNavigateToChats();
   };
+
+  // Basic mock content for the chat window specifically, 
+  // since complex chat state is handled in Messenger.tsx or full Chat view
+  const chatPartner = recentUsers[0];
 
   return (
     <>
@@ -201,37 +241,30 @@ const ChatWindow = ({
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-radiy-card scrollbar-hide">
-        {/* Mock Conversation */}
-        <div className="flex gap-4">
-          <img
-            src={RECENT_USERS[0].avatar}
-            className="w-10 h-10 rounded-2xl mt-1 cursor-pointer hover:opacity-80"
-            onClick={() => onNavigateToProfile(RECENT_USERS[0].id)}
-          />
-          <div className="bg-radiy-bg p-4 rounded-2xl rounded-tl-none text-sm text-radiy-text max-w-[75%] shadow-sm border border-radiy-border/30">
-            Привет! Как тебе новый дизайн?
-          </div>
-        </div>
-        <div className="flex gap-4 flex-row-reverse">
-          <img
-            src={CURRENT_USER.avatar}
-            className="w-10 h-10 rounded-2xl mt-1 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => onNavigateToProfile(CURRENT_USER.id)}
-          />
-          <div className="bg-radiy-mint text-radiy-bg font-medium p-4 rounded-2xl rounded-tr-none text-sm max-w-[75%] shadow-glow">
-            Привет! Очень нравится, цвета приятные и этот светящийся эффект просто супер.
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <img
-            src={RECENT_USERS[0].avatar}
-            className="w-10 h-10 rounded-2xl mt-1 cursor-pointer hover:opacity-80"
-            onClick={() => onNavigateToProfile(RECENT_USERS[0].id)}
-          />
-          <div className="bg-radiy-bg p-4 rounded-2xl rounded-tl-none text-sm text-radiy-text max-w-[75%] shadow-sm border border-radiy-border/30">
-            Рада слышать! Мы старались сделать его более глубоким.
-          </div>
-        </div>
+        {chatPartner && (
+          <>
+            <div className="flex gap-4">
+              <img
+                src={chatPartner.avatar_url}
+                className="w-10 h-10 rounded-2xl mt-1 cursor-pointer hover:opacity-80"
+                onClick={() => onNavigateToProfile(chatPartner.username)}
+              />
+              <div className="bg-radiy-bg p-4 rounded-2xl rounded-tl-none text-sm text-radiy-text max-w-[75%] shadow-sm border border-radiy-border/30">
+                Привет! Это тестовое сообщение из API.
+              </div>
+            </div>
+            <div className="flex gap-4 flex-row-reverse">
+              <img
+                src={currentUser.avatar_url}
+                className="w-10 h-10 rounded-2xl mt-1 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => onNavigateToProfile(currentUser.username)}
+              />
+              <div className="bg-radiy-mint text-radiy-bg font-medium p-4 rounded-2xl rounded-tr-none text-sm max-w-[75%] shadow-glow">
+                Привет! Система работает отлично.
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <div className="p-5 bg-radiy-bg border-t border-radiy-border">
         <div className="flex gap-3 relative">

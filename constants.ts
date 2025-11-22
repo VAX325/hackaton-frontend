@@ -16,7 +16,7 @@ export const CURRENT_USER: User = {
   id: 'me',
   name: 'Алексей С.',
   username: '@alex_design',
-  avatar: 'https://picsum.photos/id/1005/200/200',
+  avatar_url: 'https://picsum.photos/id/1005/200/200',
   coverImage: BG_DARK_GREY,
   status: 'online',
   bio: 'UI/UX Дизайнер | Фронтенд Разработчик ⚛️ | Люблю минимализм и мятный цвет.',
@@ -28,60 +28,60 @@ export const CURRENT_USER: User = {
 };
 
 export const RECENT_USERS: User[] = [
-  { 
-    id: 'u1', 
-    name: 'Марина В.', 
-    avatar: 'https://picsum.photos/id/338/200/200', 
+  {
+    id: 'u1',
+    name: 'Марина В.',
+    avatar_url: 'https://picsum.photos/id/338/200/200',
     status: 'online',
     username: '@marina_art',
     coverImage: BG_LIGHT_GREEN,
     bio: 'Графический дизайнер. Рисую логотипы и иллюстрации.',
     stats: { friends: 320, followers: 1200, posts: 142 }
   },
-  { 
-    id: 'u2', 
-    name: 'Иван Д.', 
-    avatar: 'https://picsum.photos/id/1025/200/200', 
+  {
+    id: 'u2',
+    name: 'Иван Д.',
+    avatar_url: 'https://picsum.photos/id/1025/200/200',
     status: 'offline',
     username: '@ivan_dev',
     coverImage: BG_DARK_TEAL,
     bio: 'Fullstack Developer. JS, Python, Go.',
     stats: { friends: 80, followers: 230, posts: 15 }
   },
-  { 
-    id: 'u3', 
-    name: 'Светлана К.', 
-    avatar: 'https://picsum.photos/id/237/200/200', 
+  {
+    id: 'u3',
+    name: 'Светлана К.',
+    avatar_url: 'https://picsum.photos/id/237/200/200',
     status: 'online',
     username: '@svetlana_k',
     coverImage: BG_DARK_GREY,
     bio: 'Люблю собак и утренний кофе. 🐶☕',
     stats: { friends: 450, followers: 890, posts: 330 }
   },
-  { 
-    id: 'u4', 
-    name: 'Дмитрий П.', 
-    avatar: 'https://picsum.photos/id/1012/200/200', 
+  {
+    id: 'u4',
+    name: 'Дмитрий П.',
+    avatar_url: 'https://picsum.photos/id/1012/200/200',
     status: 'offline',
     username: '@dimap',
     coverImage: BG_LIGHT_GREEN,
     bio: 'Фотограф. Снимаю портреты и пейзажи.',
     stats: { friends: 120, followers: 3400, posts: 56 }
   },
-  { 
-    id: 'u5', 
-    name: 'Елена О.', 
-    avatar: 'https://picsum.photos/id/449/200/200', 
+  {
+    id: 'u5',
+    name: 'Елена О.',
+    avatar_url: 'https://picsum.photos/id/449/200/200',
     status: 'online',
     username: '@elena_o',
     coverImage: BG_DARK_TEAL,
     bio: 'Менеджер проектов. Организую хаос.',
     stats: { friends: 560, followers: 110, posts: 8 }
   },
-  { 
-    id: 'u6', 
-    name: 'Кирилл М.', 
-    avatar: 'https://picsum.photos/id/1062/200/200', 
+  {
+    id: 'u6',
+    name: 'Кирилл М.',
+    avatar_url: 'https://picsum.photos/id/1062/200/200',
     status: 'offline',
     username: '@kirill_m',
     coverImage: BG_DARK_GREY,
@@ -94,7 +94,7 @@ export const MOCK_GROUPS: Group[] = [
   {
     id: 'g1',
     name: 'UI/UX Design Community',
-    avatar: 'https://picsum.photos/id/4/200/200',
+    avatar_url: 'https://picsum.photos/id/4/200/200',
     coverImage: BG_LIGHT_GREEN,
     description: 'Сообщество дизайнеров интерфейсов. Делимся опытом, макетами и вдохновением.',
     stats: { subscribers: 12500, posts: 3420 },
@@ -107,7 +107,7 @@ export const MOCK_GROUPS: Group[] = [
   {
     id: 'g2',
     name: 'React & Next.js',
-    avatar: 'https://picsum.photos/id/60/200/200',
+    avatar_url: 'https://picsum.photos/id/60/200/200',
     coverImage: BG_DARK_TEAL,
     description: 'Все о React экосистеме. Хуки, стейт-менеджмент, оптимизация и новости.',
     stats: { subscribers: 8400, posts: 1205 },
@@ -120,7 +120,7 @@ export const MOCK_GROUPS: Group[] = [
   {
     id: 'g3',
     name: 'Путешествия по миру',
-    avatar: 'https://picsum.photos/id/74/200/200',
+    avatar_url: 'https://picsum.photos/id/74/200/200',
     coverImage: BG_DARK_GREY,
     description: 'Фотографии с самых красивых уголков планеты. Советы туристам.',
     stats: { subscribers: 45000, posts: 8900 },

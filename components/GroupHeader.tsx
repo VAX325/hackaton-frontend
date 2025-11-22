@@ -31,7 +31,7 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({ group, onNavigateToPro
                     <div className="relative">
                         <div className="w-32 h-32 rounded-3xl border-4 border-radiy-card bg-radiy-card p-1 shadow-2xl">
                             <img
-                                src={group.avatar}
+                                src={group.avatar_url}
                                 alt={group.name}
                                 className="w-full h-full rounded-2xl object-cover"
                             />

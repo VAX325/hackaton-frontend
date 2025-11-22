@@ -9,14 +9,14 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
-    const isCurrentUser = user.id === CURRENT_USER.id;
+    const isCurrentUser = user.username === CURRENT_USER.username;
 
     return (
         <div className="bg-radiy-card rounded-none sm:rounded-3xl border border-radiy-border/50 shadow-lg mb-8 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Cover Image */}
             <div className="h-48 w-full relative group">
                 <img
-                    src={user.coverImage}
+                    src={user.cover_image}
                     alt="Cover"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -36,7 +36,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
                     <div className="relative">
                         <div className="w-32 h-32 rounded-3xl border-4 border-radiy-card bg-radiy-card p-1 shadow-2xl">
                             <img
-                                src={user.avatar}
+                                src={user.avatar_url}
                                 alt={user.name}
                                 className="w-full h-full rounded-2xl object-cover"
                             />

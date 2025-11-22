@@ -1,13 +1,11 @@
 
 export interface User {
-  id: string;
-  name: string;
-  avatar: string;
+  username: string;
+  visible_name: string,
+  avatar_url: string;
   status?: 'online' | 'offline';
-  // Profile specific fields
   coverImage: string;
   bio: string;
-  username: string;
   stats: {
     friends: number;
     followers: number;
@@ -18,7 +16,7 @@ export interface User {
 export interface Group {
   id: string;
   name: string;
-  avatar: string;
+  avatar_url: string;
   coverImage: string;
   description: string;
   stats: {
@@ -41,10 +39,13 @@ export interface Comment {
 
 export interface Post {
   id: string;
-  author: User;
-  content: string; // Markdown compatible string
+  creator: User;
+  text: string; // Markdown compatible string
   image?: string;
   likes: number;
+  dislikes: number;
+  user_reaction?: 'like' | 'dislike' | null;
+  creation_datetime: Date;
   comments: Comment[];
   timestamp: string;
   groupId?: string; // Optional: if post belongs to a group
