@@ -153,9 +153,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <img
                   key={user.username}
                   src={user.avatar_url}
-                  alt={user.name}
+                  alt={user.visible_name}
                   className={`w-10 h-10 rounded-2xl border-[3px] border-radiy-bg transition-transform hover:translate-y-[-3px] hover:z-10 ${user.status === 'online' ? 'ring-2 ring-radiy-mint/50' : ''}`}
-                  title={user.name}
+                  title={user.visible_name}
                   onClick={(e) => {
                     e.stopPropagation();
                     onNavigateToProfile(user.username);
@@ -186,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => onNavigateToProfile(currentUser.username)}
         >
           <div className="text-right hidden lg:block">
-            <div className="text-sm font-bold text-radiy-text group-hover:text-radiy-mint transition-colors drop-shadow-sm">{currentUser.name}</div>
+            <div className="text-sm font-bold text-radiy-text group-hover:text-radiy-mint transition-colors drop-shadow-sm">{currentUser.visible_name}</div>
             <div className="text-xs text-radiy-mint opacity-90 text-glow">Online</div>
           </div>
           <img

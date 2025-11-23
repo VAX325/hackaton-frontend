@@ -21,7 +21,7 @@ export const Messenger: React.FC<MessengerProps> = ({ onNavigateToProfile, curre
                 const users = await api.users.getFollowers();
                 setRecentUsers(users);
                 if (users.length > 0) {
-                    setSelectedChatId(users[0].id);
+                    setSelectedChatId(users[0].username);
                 }
             } catch (e) {
                 console.error(e);
@@ -57,7 +57,7 @@ export const Messenger: React.FC<MessengerProps> = ({ onNavigateToProfile, curre
         }
     };
 
-    const activeUser = recentUsers.find(u => u.id === selectedChatId);
+    const activeUser = recentUsers.find(u => u.username === selectedChatId);
 
     if (isLoading) return <div className="text-center p-10 text-radiy-mint animate-pulse">Загрузка чатов...</div>;
 
@@ -78,20 +78,20 @@ export const Messenger: React.FC<MessengerProps> = ({ onNavigateToProfile, curre
                 <div className="flex-1 overflow-y-auto custom-scrollbar">
                     {recentUsers.map(user => (
                         <div
-                            key={user.id}
-                            onClick={() => setSelectedChatId(user.id)}
-                            className={`p-4 flex gap-3 cursor-pointer transition-colors hover:bg-radiy-bg/50 ${selectedChatId === user.id ? 'bg-radiy-mint/10 border-l-2 border-radiy-mint' : 'border-l-2 border-transparent'}`}
+                            key={user.username}
+                            onClick={() => setSelectedChatId(user.username)}
+                            className={`p-4 flex gap-3 cursor-pointer transition-colors hover:bg-radiy-bg/50 ${selectedChatId === user.username ? 'bg-radiy-mint/10 border-l-2 border-radiy-mint' : 'border-l-2 border-transparent'}`}
                         >
                             <div className="relative">
-                                <img src={user.avatar_url} alt={user.name} className="w-12 h-12 rounded-xl object-cover" />
+                                <img src={user.avatar_url} alt={user.visible_name} className="w-12 h-12 rounded-xl object-cover" />
                                 {user.status === 'online' && (
                                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-radiy-mint rounded-full border-2 border-radiy-card shadow-glow"></div>
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-baseline mb-1">
-                                    <span className={`font-medium text-sm truncate ${selectedChatId === user.id ? 'text-radiy-mint' : 'text-radiy-text'}`}>
-                                        {user.name}
+                                    <span className={`font-medium text-sm truncate ${selectedChatId === user.username ? 'text-radiy-mint' : 'text-radiy-text'}`}>
+                                        {user.visible_name}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center">
@@ -111,10 +111,10 @@ export const Messenger: React.FC<MessengerProps> = ({ onNavigateToProfile, curre
                     <>
                         {/* Chat Header */}
                         <div className="h-16 px-6 border-b border-radiy-border/50 flex justify-between items-center bg-radiy-card/50 backdrop-blur-sm">
-                            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigateToProfile(activeUser.id)}>
-                                <img src={activeUser.avatar_url} alt={activeUser.name} className="w-10 h-10 rounded-xl group-hover:opacity-80 transition-opacity" />
+                            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onNavigateToProfile(activeUser.username)}>
+                                <img src={activeUser.avatar_url} alt={activeUser.visible_name} className="w-10 h-10 rounded-xl group-hover:opacity-80 transition-opacity" />
                                 <div>
-                                    <h3 className="font-bold text-sm text-radiy-text group-hover:text-radiy-mint transition-colors">{activeUser.name}</h3>
+                                    <h3 className="font-bold text-sm text-radiy-text group-hover:text-radiy-mint transition-colors">{activeUser.visible_name}</h3>
                                     <span className={`text-xs ${activeUser.status === 'online' ? 'text-radiy-mint text-glow' : 'text-radiy-muted'}`}>
                                         {activeUser.status === 'online' ? 'Online' : 'Был(а) недавно'}
                                     </span>
@@ -131,19 +131,19 @@ export const Messenger: React.FC<MessengerProps> = ({ onNavigateToProfile, curre
                         <div className="flex-1 overflow-y-auto p-6 space-y-6 flex flex-col">
                             {messages.length > 0 ? (
                                 messages.map(msg => (
-                                    <div key={msg.id} className={`flex gap-3 ${msg.senderId === currentUser.id ? 'flex-row-reverse' : ''}`}>
+                                    <div key={msg.id} className={`flex gap-3 ${msg.senderId === currentUser.username ? 'flex-row-reverse' : ''}`}>
                                         <img
-                                            src={msg.senderId === currentUser.id ? currentUser.avatar_url : activeUser.avatar_url}
+                                            src={msg.senderId === currentUser.username ? currentUser.avatar_url : activeUser.avatar_url}
                                             className="w-8 h-8 rounded-xl self-end mb-1"
                                         />
-                                        <div className={`max-w-[70%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.senderId === currentUser.id
+                                        <div className={`max-w-[70%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.senderId === currentUser.username
                                             ? 'bg-radiy-mint text-radiy-bg rounded-tr-none shadow-glow-hover'
                                             : 'bg-radiy-card border border-radiy-border/50 text-radiy-text rounded-tl-none'
                                             }`}>
                                             {msg.text}
-                                            <div className={`text-[9px] text-right mt-1 opacity-70 ${msg.senderId === currentUser.id ? 'text-radiy-bg' : 'text-radiy-muted'}`}>
+                                            <div className={`text-[9px] text-right mt-1 opacity-70 ${msg.senderId === currentUser.username ? 'text-radiy-bg' : 'text-radiy-muted'}`}>
                                                 {msg.timestamp}
-                                                {msg.senderId === currentUser.id && <Check className="w-3 h-3 inline ml-1" />}
+                                                {msg.senderId === currentUser.username && <Check className="w-3 h-3 inline ml-1" />}
                                             </div>
                                         </div>
                                     </div>

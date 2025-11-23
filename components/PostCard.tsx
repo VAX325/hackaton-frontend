@@ -86,7 +86,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onNavigateToProfile })
         <div className="flex items-center gap-4">
           <img
             src={post.creator.avatar_url}
-            alt={post.creator.name}
+            alt={post.creator.visible_name}
             className="w-12 h-12 rounded-2xl object-cover ring-2 ring-transparent hover:ring-radiy-mint transition-all cursor-pointer shadow-md hover:shadow-glow"
             onClick={() => onNavigateToProfile(post.creator.id)}
           />
@@ -95,8 +95,9 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onNavigateToProfile })
               className="font-bold text-radiy-text text-base hover:text-radiy-mint cursor-pointer transition-colors hover:text-glow"
               onClick={() => onNavigateToProfile(post.creator.id)}
             >
-              {post.creator.name}
+              {post.creator.visible_name}
             </h3>
+            <p className="text-radiy-mint text-sm font-medium opacity-80">{post.creator.username}</p>
             <p className="text-xs text-radiy-muted font-medium mt-0.5">{post.timestamp}</p>
           </div>
         </div>

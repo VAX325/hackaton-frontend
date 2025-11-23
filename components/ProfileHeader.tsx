@@ -37,7 +37,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
                         <div className="w-32 h-32 rounded-3xl border-4 border-radiy-card bg-radiy-card p-1 shadow-2xl">
                             <img
                                 src={user.avatar_url}
-                                alt={user.name}
+                                alt={user.visible_name}
                                 className="w-full h-full rounded-2xl object-cover"
                             />
                         </div>
@@ -48,7 +48,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
                     <div className="flex-1 pt-2 sm:pt-0 sm:mb-2">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                                <h1 className="text-2xl font-bold text-radiy-text hover:text-radiy-mint transition-colors hover:text-glow">{user.name}</h1>
+                                <h1 className="text-2xl font-bold text-radiy-text hover:text-radiy-mint transition-colors hover:text-glow">{user.visible_name}</h1>
                                 <p className="text-radiy-mint text-sm font-medium opacity-80">{user.username}</p>
                             </div>
                             <div className="flex gap-2">

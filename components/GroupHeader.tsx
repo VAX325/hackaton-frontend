@@ -83,7 +83,7 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({ group, onNavigateToPro
                                 <span>Администратор: <span
                                     className="text-radiy-text font-medium hover:text-radiy-mint cursor-pointer transition-colors"
                                     onClick={() => onNavigateToProfile(group.details.admin.id)}
-                                >{group.details.admin.name}</span></span>
+                                >{group.details.admin.visible_name}</span></span>
                             </div>
 
                             <div className="flex items-start gap-2 text-sm text-radiy-muted">
@@ -97,7 +97,7 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({ group, onNavigateToPro
                                                 className="bg-radiy-card border border-radiy-border px-2 py-0.5 rounded-lg text-xs text-radiy-text hover:border-radiy-mint cursor-pointer transition-colors"
                                                 onClick={() => onNavigateToProfile(mod.id)}
                                             >
-                                                {mod.name}
+                                                {mod.visible_name}
                                             </span>
                                         ))}
                                     </div>

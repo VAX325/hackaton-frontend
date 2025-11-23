@@ -27,11 +27,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
             if (isLogin) {
                 response = await api.auth.login(username, password);
             } else {
-                response = await api.auth.register({ username, password, name });
+                const visible_name = name;
+                response = await api.auth.register({ username, password, visible_name });
             }
 
             if (response && response.access && response.refresh) {
-                onLoginSuccess(response.access);
+                onLoginSuccess(response.access, response.refresh);
             } else {
                 throw new Error("Login failed due invalid server response")
             }
